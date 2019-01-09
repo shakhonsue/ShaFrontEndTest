@@ -18,7 +18,7 @@ class WatchList extends Component {
     var movieBoxes = [];
     var watchlist = [];
     var savedWatchlist = [];
-    savedWatchlist = JSON.parse(localStorage.getItem("watchlist"));
+    savedWatchlist = JSON.parse(localStorage.getItem("watchlistWpk"));
     if (savedWatchlist) {
       watchlist = savedWatchlist;
     }
@@ -82,7 +82,7 @@ class WatchList extends Component {
         <input
           className="search-box"
           style={{
-            fontSize: 20,
+            fontSize: 18,
             display: "block",
             width: "95%",
             marginTop: 30,

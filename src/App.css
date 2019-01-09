@@ -1,10 +1,11 @@
 /* header */
 .title-box {
   color: #fff;
-  font-size: 26px;
+  font-size: 23px;
   padding-left: 25px;
   padding-top: 30px;
   width: 125px;
+  font-family: "Helvetica";
   text-align: left;
 }
 
@@ -20,6 +21,8 @@
   margin-left: "30px";
   background-color: "#313541";
   color: "white";
+  font-family: "Helvetica";
+
 }
 .App {
   text-align: center;
@@ -28,6 +31,7 @@
   float: left;
   color: white;
   font-size: 24px;
+  font-family: "Helvetica";
   margin-top: 3%;
   padding-bottom: 20px;
   padding-left: 30px;
@@ -63,6 +67,7 @@
   height: 30px;
   color: #fff;
   font-style: bold;
+  font-family: "Helvetica";
   background: transparent;
   border-color: aqua;
   border-radius: 7%;

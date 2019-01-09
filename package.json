@@ -1,8 +1,8 @@
 {
-  "name": "frontend-test",
+  "name": "ShaFrontEndTest",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://khinthuzaraung.github.io/Khin-FrontEndTest/",
+  "homepage": "https://shakhonsue.github.io/ShaFrontEndTest/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.12",
     "@fortawesome/free-solid-svg-icons": "^5.6.3",

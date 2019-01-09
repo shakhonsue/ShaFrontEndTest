@@ -31,8 +31,17 @@ class MovieBox extends Component {
         genres: [{ id: 18, name: "" }],
         percent_class: ""
       }
+    ],
+    genres: [
+      {
+        genres: [{ id: 18, name: "" }],
+        percent_class: ""
+      }
     ]
   };
+  componentDidMount() {
+    this.getGenres();
+  }
 
   handleAdd(event) {
     var id = this.props.movie.id;
@@ -50,19 +59,24 @@ class MovieBox extends Component {
       overview: this.props.movie.overview
     };
     var savedWatchlist = [];
-    savedWatchlist = Array.from(JSON.parse(localStorage.getItem("watchlist")));
-    if (savedWatchlist) {
-      savedWatchlist.push(watchMovies);
-      savedWatchlist = this.getUnique(savedWatchlist, "id");
-      localStorage.setItem("watchlist", JSON.stringify(savedWatchlist));
-      this.setState({
-        watchlist: savedWatchlist
-      });
+    if (localStorage.getItem("watchlistWpk") !== null) {
+      savedWatchlist = Array.from(
+        JSON.parse(localStorage.getItem("watchlistWpk"))
+      );
+      if (savedWatchlist) {
+        savedWatchlist.push(watchMovies);
+        savedWatchlist = this.getUnique(savedWatchlist, "id");
+        localStorage.setItem("watchlistWpk", JSON.stringify(savedWatchlist));
+        this.setState({
+          watchlist: savedWatchlist
+        });
+      }
     } else {
       this.setState({
         watchlist: watchMovies
       });
-      localStorage.setItem("watchlist", JSON.stringify(watchMovies));
+      savedWatchlist.push(watchMovies);
+      localStorage.setItem("watchlistWpk", JSON.stringify(savedWatchlist));
     }
   }
   // prevent watchlist from duplicating items
@@ -78,6 +92,32 @@ class MovieBox extends Component {
       .map(e => arr[e]);
 
     return unique;
+  }
+  //get genres of movie
+  getGenres() {
+    const urlString =
+      "https://api.themoviedb.org/3/movie/" +
+      this.props.movie.id +
+      "?api_key=4ccda7a34189fcea2fc752a6ee339500&append_to_response=credits";
+
+    $.ajax({
+      url: urlString,
+      success: searchResults => {
+        var detail = searchResults;
+        var genres = detail.genres;
+        if (genres.length > 2) {
+          genres = genres.slice(0, 2);
+          detail.genres = genres;
+        }
+        detail.percent_class = "";
+        var details = [];
+        details.push(detail);
+        this.setState({ genres: details });
+      },
+      error: (xhr, status, err) => {
+        console.error("Failed to fetch data");
+      }
+    });
   }
   //get the detail info of the movie
   movieDetail() {
@@ -239,8 +279,8 @@ class MovieBox extends Component {
         key={this.props.movie.id}
         style={{
           width: "230px",
-          height: "420px",
-          paddingTop: 25,
+          height: "395px",
+          paddingTop: 5,
           color: "#00cca3",
           float: "left"
         }}
@@ -271,30 +311,28 @@ class MovieBox extends Component {
               </div>
 
               <div className="related-div">
-                <div className="modal-header" style={{ paddingLeft: 20 }}>
+                <div className="modal-header" style={{ paddingLeft: 30 }}>
                   <strong>{this.state.relatedMovieTitle}</strong>
                   <br />
                 </div>
-                {this.state.relatedMovies.map(function(movie, index) {
-                  return (
-                    <div className="related-movie" key={index}>
-                      <div className="related-img">
-                        <img alt="poster" src={movie.poster_path} />
+                <div style={{ paddingLeft: 10 }}>
+                  {this.state.relatedMovies.map(function(movie, index) {
+                    return (
+                      <div className="related-movie" key={index}>
+                        <div className="related-img">
+                          <img alt="poster" src={movie.poster_path} />
+                        </div>
+                        <br />
+                        {movie.title}
                       </div>
-                      <br />
-                      {movie.title}
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             </div>
             <div className="modal-div2">
-              <div className="modal-title">
-                <h2>
-                  <strong>{this.props.movie.title}</strong>
-                </h2>
-              </div>
-
+              <div className="modal-title">{this.props.movie.title}</div>
+              <br />
               <div>
                 <div className="detail-top">
                   <div className={this.state.detail[0].percent_class}>
@@ -390,8 +428,10 @@ class MovieBox extends Component {
               </div>
               {this.state.backdrops.map(function(backdrop, index) {
                 return (
-                  <div className="backdrops" key={index}>
-                    <img alt="backgrounds" src={backdrop.file_path} />
+                  <div className="backdrops-div" key={index}>
+                    <div className="backdrops">
+                      <img alt="backgrounds" src={backdrop.file_path} />
+                    </div>
                   </div>
                 );
               })}
@@ -433,14 +473,18 @@ class MovieBox extends Component {
             <div className="title">
               <strong> {this.props.movie.title}</strong>
               <br />
+
               <span
                 style={{
                   color: "#fff",
-                  textAlign: "left",
-                  letterSpacing: "0.2mm"
+                  textAlign: "left"
                 }}
               >
-                Year :
+                Genres:
+                <span className="green-text">
+                  {this.state.genres[0].genres.map(g => g.name).join(", ")}
+                </span>{" "}
+                Year:
               </span>
               <span> {this.props.movie.release_date}</span>
             </div>
